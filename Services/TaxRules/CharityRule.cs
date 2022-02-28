@@ -10,6 +10,8 @@ namespace Services.TaxRules
 {
     public class CharityRule : TaxRuleBase
     {
+        public CharityRule(int order) : base(order) { }
+
         public override TaxationResult Evaluate(TaxIncome taxIncome)
         {
             if (!ShouldRun(taxIncome))

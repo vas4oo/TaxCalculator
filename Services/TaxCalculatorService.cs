@@ -2,6 +2,7 @@
 using Services.Interfaces;
 using Services.Models;
 using Services.RuleEngine;
+using Services.TaxRules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +15,18 @@ namespace Services
     {
         public TaxesDTO CalculateTaxes(TaxPayerDTO taxPayer)
         {
-            var ruleType = typeof(ITaxCalculatorRule);
-            IEnumerable<ITaxCalculatorRule> rules = this.GetType().Assembly.GetTypes()
-                .Where(p => ruleType.IsAssignableFrom(p) && !p.IsInterface && !p.IsAbstract)
-                .Select(r => Activator.CreateInstance(r) as ITaxCalculatorRule);
+            List<ITaxCalculatorRule> rules = new List<ITaxCalculatorRule>()
+            {
+                new CharityRule(0),
+                new IncomeRule(1),
+                new SocialContributionRule(1)
+            };
 
             var engine = new TaxCalculatorRuleEngine(rules);
             var taxationResults = engine.CalculateTax(new TaxIncome(taxPayer.GrossIncome, taxPayer.CharitySpent.GetValueOrDefault()));
 
-            var incomeTax = FindTaxation(taxationResults, TaxRuleTypes.Income);
-            var socialTax = FindTaxation(taxationResults, TaxRuleTypes.Social);
+            var incomeTax = taxationResults.FindTaxation(TaxRuleTypes.Income);
+            var socialTax = taxationResults.FindTaxation(TaxRuleTypes.Social);
 
             var taxes = new TaxesDTO
             {
@@ -35,14 +38,6 @@ namespace Services
 
 
             return taxes;
-        }
-
-        private static decimal FindTaxation(IEnumerable<TaxationResult> taxationResults, TaxRuleTypes taxRuleType)
-        {
-            var r = taxationResults.FirstOrDefault(r => r.TaxType.Equals(taxRuleType));
-            if(r == null)
-                return 0;
-            return r.TaxValue;
         }
     }
 }

@@ -6,5 +6,6 @@ namespace Services.Interfaces
     {
         TaxationResult Evaluate(TaxIncome taxPayer);
         bool ShouldRun(TaxIncome taxPayer);
+        int Order { get; }
     }
 }

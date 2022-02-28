@@ -10,6 +10,8 @@ namespace Services.TaxRules
 {
     public class SocialContributionRule : TaxRuleBase
     {
+        public SocialContributionRule(int order) : base(order) { }
+
         public override TaxationResult Evaluate(TaxIncome taxIncome)
         {
             if (!ShouldRun(taxIncome))

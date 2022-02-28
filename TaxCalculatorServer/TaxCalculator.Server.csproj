@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Services\Services.csproj" />
+    <ProjectReference Include="..\Services\TaxCalculator.Services.csproj" />
   </ItemGroup>
 
 </Project>

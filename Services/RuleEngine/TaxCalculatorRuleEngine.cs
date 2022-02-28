@@ -10,15 +10,16 @@ namespace Services.RuleEngine
 {
     public class TaxCalculatorRuleEngine
     {
-        private readonly IEnumerable<ITaxCalculatorRule> _rules;
+        private readonly IEnumerable<ITaxCalculatorRule> rules;
         public TaxCalculatorRuleEngine(IEnumerable<ITaxCalculatorRule> rules)
         {
-            _rules = rules;
+            this.rules = rules;
         }
-        public List<TaxationResult> CalculateTax(TaxIncome taxIncome)
+        public IEnumerable<TaxationResult> CalculateTax(TaxIncome taxIncome)
         {
             var result = new List<TaxationResult>();
-            foreach (var rule in _rules)
+            var orderedRules = GetTaxRulesByOrder();
+            foreach (var rule in orderedRules)
             {
                 //Has to check here as well, because each rule could change input for the next one.
                 if (!rule.ShouldRun(taxIncome)) continue;
@@ -28,6 +29,10 @@ namespace Services.RuleEngine
                 result.Add(taxationResult);
             }
             return result;
+        }
+        private IEnumerable<ITaxCalculatorRule> GetTaxRulesByOrder()
+        {
+            return this.rules.OrderBy(r => r.Order);
         }
     }
 }
