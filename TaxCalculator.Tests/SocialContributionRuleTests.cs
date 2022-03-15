@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaxCalculator.Services.Models;
 using Xunit;
 
 namespace TaxCalculator.Tests
@@ -17,7 +18,7 @@ namespace TaxCalculator.Tests
         [InlineData(30, 1200)]
         public void CalculateSocialContribution(decimal expectedResult, decimal grossIncome)
         {
-            var rule = new SocialContributionRule(0);
+            var rule = new SocialContributionRule(1, new TaxLimit(15, 1000, 3000));
             var result = rule.Evaluate(new TaxIncome(grossIncome, 0));
             Assert.Equal(expectedResult, result.TaxValue);
             Assert.Equal(grossIncome, result.TaxIncome.GrossIncome);   

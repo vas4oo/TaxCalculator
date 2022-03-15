@@ -1,6 +1,7 @@
 using Services.Models;
 using Services.TaxRules;
 using System;
+using TaxCalculator.Services.Models;
 using Xunit;
 
 namespace TaxCalculator.Tests
@@ -14,7 +15,7 @@ namespace TaxCalculator.Tests
         [InlineData(0, 1000, 0)]
         public void CalculateCharity(decimal expectedResult, decimal grossIncome, decimal charitySpent)
         {
-            var rule = new CharityRule(0);
+            var rule = new CharityRule(0, new TaxLimit(10, 0, 0));
             var result = rule.Evaluate(new TaxIncome(grossIncome, charitySpent));
             var expectedIncomeAfterCharity = grossIncome - result.TaxValue;
             Assert.Equal(expectedResult, result.TaxValue);

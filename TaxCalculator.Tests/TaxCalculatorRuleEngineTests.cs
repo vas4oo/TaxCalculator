@@ -8,19 +8,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaxCalculator.Services.Models;
 using Xunit;
 
 namespace TaxCalculator.Tests
 {
     public class TaxCalculatorRuleEngineTests
     {
-        private static IEnumerable<ITaxCalculatorRule> GetRules()
+        private static IEnumerable<ITaxCalculatorRule<TaxLimit>> GetRules()
         {
-            List<ITaxCalculatorRule> rules = new List<ITaxCalculatorRule>()
+            List<ITaxCalculatorRule<TaxLimit>> rules = new List<ITaxCalculatorRule<TaxLimit>>()
             {
-                new CharityRule(0),
-                new IncomeRule(1),
-                new SocialContributionRule(1)
+                new CharityRule(0, new TaxLimit(10, 0, 0)),
+                new IncomeRule(1, new TaxLimit(10, 1000, null)),
+                new SocialContributionRule(1, new TaxLimit(15, 1000, 3000))
             };
 
             return rules;

@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaxCalculator.Services.Models;
 
 namespace Services.RuleEngine
 {
     public class TaxCalculatorRuleEngine
     {
-        private readonly IEnumerable<ITaxCalculatorRule> rules;
-        public TaxCalculatorRuleEngine(IEnumerable<ITaxCalculatorRule> rules)
+        private readonly IEnumerable<ITaxCalculatorRule<TaxLimit>> rules;
+        public TaxCalculatorRuleEngine(IEnumerable<ITaxCalculatorRule<TaxLimit>> rules)
         {
             this.rules = rules;
         }
@@ -30,7 +31,7 @@ namespace Services.RuleEngine
             }
             return result;
         }
-        private IEnumerable<ITaxCalculatorRule> GetTaxRulesByOrder()
+        private IEnumerable<ITaxCalculatorRule<TaxLimit>> GetTaxRulesByOrder()
         {
             return this.rules.OrderBy(r => r.Order);
         }
